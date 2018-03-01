@@ -9,12 +9,12 @@ namespace Pizza
             var pars = lines[0].Split(' ');
             var R = int.Parse(pars[0]);
             var C = int.Parse(pars[1]);
-            var L = int.Parse(pars[2]);
-            var H = int.Parse(pars[3]);
+            var F = int.Parse(pars[2]);
+            var N = int.Parse(pars[3]);
+            var B = int.Parse(pars[4]);
+            var T = int.Parse(pars[5]);
 
-            var pizza = PizzaBuilder.BuildPizza(lines.Skip(1).ToArray(), R, C);
-
-            return new Problem(L, H, pizza);
+            return new Problem(R, C, F, N, B, T);
         }
     }
 }

@@ -15,10 +15,9 @@ namespace Pizza.Tests
         [Fact]
         public void Test()
         {
-            var lines = File.ReadAllLines(@"..\..\..\Resources\example.in");
+            var lines = File.ReadAllLines(@"..\..\..\Resources\a_example.in");
             var problem = ProblemBuilder.Build(lines);
             Assert.NotNull(problem);
-            Trace.WriteLine(problem.Pizza.ToString());
         }
     }
 }
