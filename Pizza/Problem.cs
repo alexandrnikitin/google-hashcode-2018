@@ -11,8 +11,10 @@ namespace Pizza
         public int Bonus { get; }
         public int Steps { get; }
         public List<Ride> RidesList { get; }
+        public List<CarState> Cars { get; }
 
-        public Problem(int rows, int columns, int fleet, int rides, int bonus, int steps, List<Ride> ridesList)
+        public Problem(int rows, int columns, int fleet, int rides, int bonus, int steps, List<Ride> ridesList,
+            List<CarState> cars)
         {
             Rows = rows;
             Columns = columns;
@@ -21,6 +23,7 @@ namespace Pizza
             Bonus = bonus;
             Steps = steps;
             RidesList = ridesList;
+            Cars = cars;
         }
     }
 }

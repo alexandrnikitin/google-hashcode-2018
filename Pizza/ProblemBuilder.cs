@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Pizza
 {
@@ -15,6 +16,13 @@ namespace Pizza
             var T = int.Parse(pars[5]);
 
             var rides = RidesBuilder.Build(lines.Skip(1).ToArray());
+
+            var cars = new List<CarState>(F);
+            for (var i = 0; i < F; i++)
+            {
+                var car = new CarState {Id = i};
+                cars.Add(car);
+            }
 
             return new Problem(R, C, F, N, B, T, rides);
         }
