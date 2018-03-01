@@ -6,7 +6,7 @@ namespace Pizza
     {
         public static Solution Solve(Problem problem)
         {
-            var solution = new Solution(0, new List<Slice>());
+            var solution = new Solution(problem.Fleet);
 
             return solution;
         }
