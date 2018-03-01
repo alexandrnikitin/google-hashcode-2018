@@ -12,6 +12,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizza.Benchmarks", "Pizza.Benchmarks\Pizza.Benchmarks.csproj", "{02E0C11B-5873-4FCE-883E-A368595A2622}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CCB7AD96-1335-41D6-881C-9467A7B83FB3}"
+	ProjectSection(SolutionItems) = preProject
+		Resources\a_example.in = Resources\a_example.in
+		Resources\b_should_be_easy.in = Resources\b_should_be_easy.in
+		Resources\c_no_hurry.in = Resources\c_no_hurry.in
+		Resources\d_metropolis.in = Resources\d_metropolis.in
+		Resources\e_high_bonus.in = Resources\e_high_bonus.in
+		Resources\example.out = Resources\example.out
+		Resources\online_qualification_round_2018.pdf = Resources\online_qualification_round_2018.pdf
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rides", "Rides\Rides.csproj", "{BB23D0BA-1424-4929-867A-1E62F7A553FE}"
 EndProject

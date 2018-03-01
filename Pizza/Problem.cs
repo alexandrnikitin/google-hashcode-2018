@@ -1,4 +1,6 @@
-﻿namespace Pizza
+﻿using System.Collections.Generic;
+
+namespace Pizza
 {
     public class Problem
     {
@@ -8,8 +10,9 @@
         public int Rides { get; }
         public int Bonus { get; }
         public int Steps { get; }
+        public List<Ride> RidesList { get; }
 
-        public Problem(int rows, int columns, int fleet, int rides, int bonus, int steps)
+        public Problem(int rows, int columns, int fleet, int rides, int bonus, int steps, List<Ride> ridesList)
         {
             Rows = rows;
             Columns = columns;
@@ -17,6 +20,7 @@
             Rides = rides;
             Bonus = bonus;
             Steps = steps;
+            RidesList = ridesList;
         }
     }
 }

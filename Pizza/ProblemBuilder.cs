@@ -14,7 +14,9 @@ namespace Pizza
             var B = int.Parse(pars[4]);
             var T = int.Parse(pars[5]);
 
-            return new Problem(R, C, F, N, B, T);
+            var rides = RidesBuilder.Build(lines.Skip(1).ToArray());
+
+            return new Problem(R, C, F, N, B, T, rides);
         }
     }
 }

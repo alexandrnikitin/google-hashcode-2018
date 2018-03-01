@@ -17,7 +17,10 @@ namespace Pizza.Tests
         {
             var lines = File.ReadAllLines(@"..\..\..\Resources\a_example.in");
             var problem = ProblemBuilder.Build(lines);
+
             Assert.NotNull(problem);
+            Assert.NotNull(problem.RidesList);
+            Assert.Equal(3, problem.RidesList.Count);
         }
     }
 }
