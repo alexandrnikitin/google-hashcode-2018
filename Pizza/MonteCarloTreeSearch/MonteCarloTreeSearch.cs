@@ -131,7 +131,7 @@ namespace Pizza.MonteCarloTreeSearch
             var root = new Node<TAction>(state);
             root.BuildTree((numIterations, elapsedMs) => numIterations < maxIterations && elapsedMs < timeBudget);
             return root.Children
-                .OrderByDescending(n => n.NumRuns);
+                .OrderByDescending(n => n.NumWins);
         }
     }
 }
