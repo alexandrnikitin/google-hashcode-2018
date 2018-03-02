@@ -41,6 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CarState.cs" />
+    <Compile Include="CityState.cs" />
+    <Compile Include="MonteCarloTreeSearch\CollectionExtensions.cs" />
+    <Compile Include="MonteCarloTreeSearch\IAction.cs" />
+    <Compile Include="MonteCarloTreeSearch\IMctsNode.cs" />
+    <Compile Include="MonteCarloTreeSearch\IState.cs" />
+    <Compile Include="MonteCarloTreeSearch\MonteCarloTreeSearch.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="ProblemBuilder.cs" />
     <Compile Include="ProblemSolver.cs" />

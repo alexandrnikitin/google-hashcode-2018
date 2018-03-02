@@ -8,8 +8,9 @@ namespace Pizza
         {
             var rides = new List<Ride>(lines.Length);
 
-            foreach (var line in lines)
+            for (var i = 0; i < lines.Length; i++)
             {
+                var line = lines[i];
                 var pars = line.Split(' ');
                 var a = int.Parse(pars[0]);
                 var b = int.Parse(pars[1]);
@@ -17,7 +18,7 @@ namespace Pizza
                 var y = int.Parse(pars[3]);
                 var s = int.Parse(pars[4]);
                 var f = int.Parse(pars[5]);
-                var ride = new Ride {From = new Point(a, b), To = new Point(x, y), Pickup = s, Finish = f};
+                var ride = new Ride {Id = i, From = new Point(a, b), To = new Point(x, y), Start = s, Finish = f};
                 rides.Add(ride);
             }
 

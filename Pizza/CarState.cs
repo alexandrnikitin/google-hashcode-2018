@@ -1,4 +1,5 @@
 ﻿using System;
+using Pizza.MonteCarloTreeSearch;
 
 namespace Pizza
 {
@@ -6,10 +7,15 @@ namespace Pizza
     {
         public int Id { get; set; }
         public Point Location { get; set; }
-        public int CurrentTime { get; set; }
+        public int Time { get; set; }
+
+        public bool CanMakeIt(Ride ride)
+        {
+            return ride.Finish >= Time + Location.Distance(ride.From) + ride.From.Distance(ride.To);
+        }
     }
 
-    public class Point
+    public struct Point
     {
         public int X { get; }
         public int Y { get; }
@@ -26,17 +32,18 @@ namespace Pizza
         }
     }
 
-    public class Ride
+    public struct Ride : IAction
     {
+        public int Id { get; set; }
         public Point From { get; set; }
         public Point To { get; set; }
 
-        public int Pickup { get; set; }
+        public int Start { get; set; }
         public int Finish { get; set; }
 
         public int WaitTime(CarState carState)
         {
-            return Pickup - carState.CurrentTime - carState.Location.Distance(From);
+            return Start - carState.Time - carState.Location.Distance(From);
         }
     }
 }

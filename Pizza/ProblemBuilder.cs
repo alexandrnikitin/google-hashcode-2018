@@ -24,7 +24,7 @@ namespace Pizza
                 cars.Add(car);
             }
 
-            return new Problem(R, C, F, N, B, T, rides);
+            return new Problem(R, C, F, N, B, T, rides, cars);
         }
     }
 }

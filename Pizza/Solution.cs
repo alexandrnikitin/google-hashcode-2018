@@ -11,6 +11,10 @@ namespace Pizza
         public Solution(int fleet)
         {
             Vehicles = new List<List<int>>(fleet);
+            for (var i = 0; i < fleet; i++)
+            {
+                Vehicles.Add(new List<int>());
+            }
         }
 
         public override string ToString()
