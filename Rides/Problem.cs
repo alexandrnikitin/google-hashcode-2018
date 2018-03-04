@@ -13,6 +13,8 @@ namespace Rides
         public List<Ride> Rides { get; }
         public List<Car> Cars { get; }
 
+        public static int BonusS { get; set; }
+
         public Problem(
             int rows, int columns,
             int numberOfCars, int numberOfRides,

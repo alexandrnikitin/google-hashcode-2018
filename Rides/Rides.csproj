@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rides</RootNamespace>
     <AssemblyName>Rides</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -44,21 +44,32 @@
   <ItemGroup>
     <Compile Include="Car.cs" />
     <Compile Include="CityState.cs" />
+    <Compile Include="CityCarState.cs" />
+    <Compile Include="IndependentSet\Edge.cs" />
+    <Compile Include="IndependentSet\Graph.cs" />
+    <Compile Include="IndependentSet\IndependentSetProblemSolver.cs" />
+    <Compile Include="IndependentSet\Vertex.cs" />
     <Compile Include="MakeRideAction.cs" />
+    <Compile Include="MaxHeap.cs" />
     <Compile Include="MCTS\CollectionExtensions.cs" />
     <Compile Include="MCTS\IAction.cs" />
     <Compile Include="MCTS\INode.cs" />
     <Compile Include="MCTS\IState.cs" />
     <Compile Include="MCTS\MonteCarloTreeSearch.cs" />
     <Compile Include="MCTS\Node.cs" />
+    <Compile Include="MinHeap.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="ProblemBuilder.cs" />
+    <Compile Include="GreedyProblemSolver.cs" />
+    <Compile Include="CityProblemSolver.cs" />
     <Compile Include="ProblemSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ride.cs" />
     <Compile Include="RidesBuilder.cs" />
+    <Compile Include="RidesView.cs" />
     <Compile Include="Solution.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

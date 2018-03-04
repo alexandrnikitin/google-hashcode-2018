@@ -24,6 +24,7 @@ namespace Rides
                 cars.Add(car);
             }
 
+            Problem.BonusS = B;
             return new Problem(R, C, F, N, B, T, rides, cars);
         }
     }

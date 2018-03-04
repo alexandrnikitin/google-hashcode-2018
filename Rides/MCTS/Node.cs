@@ -12,7 +12,7 @@ namespace Rides.MCTS
             Parent = parent;
             State = state;
             Action = action;
-            UntriedActions = new HashSet<TAction>(state.GetAvailableActions().Take(100));
+            UntriedActions = new HashSet<TAction>(state.GetAvailableActions());
         }
 
         public Node<TAction> Parent { get; }
@@ -21,8 +21,12 @@ namespace Rides.MCTS
         public IList<Node<TAction>> Children { get; } = new List<Node<TAction>>();
         public ISet<TAction> UntriedActions { get; }
         public double Score { get; set; }
+        public bool Finished { get; set; }
 
         private readonly Random _random = new Random();
+        private readonly int _epsilonExpansion = 50;
+        private readonly int _epsilonExploration = 50;
+        private readonly int _simulationSteps = 10;
 
         public void BuildTree(Func<int, long, bool> shouldContinue)
         {
@@ -30,47 +34,86 @@ namespace Rides.MCTS
             var timer = Stopwatch.StartNew();
             while (shouldContinue(iterations++, timer.ElapsedMilliseconds))
             {
+                //Trace.WriteLine("Start!!!!!!!!!!!!!");
                 var current = this;
+                
+                // nothing to expand and all nodes explored
+                if (!current.UntriedActions.Any() && current.Children.All(x => x.Finished)) return;
+                if (current.Finished) return;
 
+                //Trace.WriteLine($"Selecting");
                 // select
-                while (!current.UntriedActions.Any() && current.Children.Any())
+                if (TrySelect(out var next)) current = next;
+                else
                 {
-                    var next = current.Select();
-                    if (next == null) break;
+                    //Trace.WriteLine($"Finishing node");
+                    while (next != null)
+                    {
+                        if (next.Children.All(x => x.Finished) && !next.UntriedActions.Any())
+                        {
+                            next.Finished = true;
+                        }
 
-                    current = next;
+                        next = next.Parent;
+                    }
+                    continue;
                 }
 
-
+                //Trace.WriteLine($"Selected node with Score: {current.Score} Action: {current.Action}");
+                var currentScore = 0.0;
+                
                 // expand
                 if (current.UntriedActions.Any())
                 {
-                    current = current.ExpandGreedy();
+                    current = current.ExpandRandom();
+                    currentScore = current.State.GetScore();
+                    //Trace.WriteLine($"Expanded to node {current.Action}");
                 }
 
+                
                 // simulate
-                var simulatedState = current.Simulate();
-
-                // backprop
-                if (simulatedState != null)
+                if (current.TrySimulateRandom(out var simulatedState))
                 {
-                    var currentScore = simulatedState.GetScore();
+                    currentScore = simulatedState.GetScore();
+                    //Trace.WriteLine($"Simulated score {currentScore}");
+
+                }
+
+                if (currentScore>0)
+                {
                     while (current != null)
                     {
-                        current.Score += currentScore;
+                        current.Score = Math.Max(current.Score, currentScore);
                         current = current.Parent;
                     }
                 }
-
             }
+            //Trace.WriteLine($"iterations: {iterations}");
         }
 
-        private Node<TAction> Select()
+
+        private bool TrySelect(out Node<TAction> next)
         {
-            return _random.Next(100) < 20 ? Children.RandomChoice() : Children.MaxElementBy(e => e.Score);
+            next = this;
+            if (Children.All(x => x.Finished) && !UntriedActions.Any()) return false; //finish
+            if (Children.All(x => x.Finished) && UntriedActions.Any()) return true; //expand current
+
+            var isExpansion = _random.Next(100) < _epsilonExpansion;
+            if (isExpansion && UntriedActions.Any())
+            {
+                return true;
+            }
+
+            var isExploration = _random.Next(100) < _epsilonExploration;
+            if (isExploration)
+            {
+                return Children.Where(x => !x.Finished).ToList().RandomChoice().TrySelect(out next);
+            }
+            return Children.Where(x => !x.Finished).MaxElementBy(e => e.Score).TrySelect(out next);
         }
 
-        private Node<TAction> ExpandGreedy()
+
+        private Node<TAction> ExpandRandom()
         {
             var action = UntriedActions.RandomChoice();
             UntriedActions.Remove(action);
@@ -81,22 +124,42 @@ namespace Rides.MCTS
             return child;
         }
 
-        private IState<TAction> Simulate()
+        private bool TrySimulateGreedy(out IState<TAction> state)
         {
-            var availableActions = State.GetAvailableActions().Take(100).ToList();
-            if (!availableActions.Any()) return null;
+            state = default(IState<TAction>);
+            var availableActions = State.GetAvailableActions();
+            if (!availableActions.Any()) return false;
 
-            var state = (IState<TAction>)State.Clone();
+            state = (IState<TAction>) State.Clone();
             var counter = 0;
-            while (availableActions.Any() && counter < 10)
+            
+            while (availableActions.Any() && counter < _simulationSteps)
             {
-                state.ApplyAction(availableActions.RandomChoice());
-                availableActions = state.GetAvailableActions().Take(100).ToList();
+                state.ApplyAction(availableActions.First());
+                availableActions = state.GetAvailableActions();
                 counter++;
             }
 
-            return state;
+            return true;
+        }
 
+        private bool TrySimulateRandom(out IState<TAction> state)
+        {
+            state = default(IState<TAction>);
+            var availableActions = State.GetAvailableActions();
+            if (!availableActions.Any()) return false;
+
+            state = (IState<TAction>) State.Clone();
+            var counter = 0;
+            
+            while (availableActions.Any() && counter < _simulationSteps)
+            {
+                state.ApplyAction(availableActions.RandomChoice());
+                availableActions = state.GetAvailableActions();
+                counter++;
+            }
+
+            return true;
         }
 
 

@@ -29,6 +29,13 @@ namespace Rides
             return sb.ToString();
         }
 
+        public List<int> GetMissedRides()
+        {
+            var rides = CarActions.SelectMany(x => x.Select(y => y.Ride.Id)).OrderBy(x => x).ToList();
+            var result = Enumerable.Range(rides.Min(), rides.Count).Except(rides).ToList();
+            return result;
+        }
+
         public int GetTotalScore(int bonus)
         {
             var score = 0;
@@ -36,13 +43,7 @@ namespace Rides
             {
                 foreach (var action in actions)
                 {
-                    var rideDistance = action.Ride.From.Distance(action.Ride.To);
-                    var pickDistance = action.Car.Location.Distance(action.Ride.From);
-                    score += rideDistance;
-                    var timeToPick = action.Car.Time + pickDistance;
-                    var onTime = timeToPick <= action.Ride.Start;
-
-                    if (onTime) score += bonus;
+                    score += action.GetFactScore(Problem.BonusS);
                 }
             }
 

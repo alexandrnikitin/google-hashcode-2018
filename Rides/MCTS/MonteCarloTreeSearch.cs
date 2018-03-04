@@ -24,7 +24,7 @@ namespace Rides.MCTS
         {
             var root = Create(state);
             root.BuildTree((numIterations, elapsedMs) => numIterations < maxIterations && elapsedMs < timeBudget);
-            return root.Children.OrderByDescending(n => n.Score);
+            return root.Children.OrderByDescending(x => x.Score);
         }
     }
 }

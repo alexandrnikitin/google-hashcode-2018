@@ -5,7 +5,7 @@ namespace Rides.MCTS
 {
     public interface IState<TAction> : ICloneable
     {
-        IEnumerable<TAction> GetAvailableActions();
+        List<TAction> GetAvailableActions();
         void ApplyAction(TAction action);
         double GetScore();
     }

@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using Rides.IndependentSet;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Rides.Tests
+namespace Rides.Tests.IndependentSet
 {
-    public class ProblemSolverTests
+    public class IndependentSetProblemSolverTests
     {
-        public ProblemSolverTests(ITestOutputHelper outputHelper)
+        public IndependentSetProblemSolverTests(ITestOutputHelper outputHelper)
         {
             Trace.Listeners.Add(new TestTraceListener(outputHelper));
         }
@@ -17,7 +17,7 @@ namespace Rides.Tests
         public void ATest()
         {
             var problem = ProblemBuilder.Build(File.ReadAllLines(@"..\..\..\Resources\a_example.in"));
-            var solution = ProblemSolver.Solve(problem);
+            var solution = IndependentSetProblemSolver.Solve(problem);
             Assert.NotNull(solution);
             Trace.WriteLine("Finished");
             Trace.WriteLine(solution.GetTotalScore(problem.Bonus).ToString());
@@ -29,30 +29,10 @@ namespace Rides.Tests
         public void BTest()
         {
             var problem = ProblemBuilder.Build(File.ReadAllLines(@"..\..\..\Resources\b_should_be_easy.in"));
-            var solution = ProblemSolver.Solve(problem);
+            var solution = IndependentSetProblemSolver.Solve(problem);
             Assert.NotNull(solution);
             Trace.WriteLine(solution.GetTotalScore(problem.Bonus).ToString());
             Trace.WriteLine($"Missed rides: {string.Join(" ", solution.GetMissedRides())}");
-            Trace.WriteLine(solution.ToString());
-        }
-
-        [Fact]
-        public void CTest()
-        {
-            var problem = ProblemBuilder.Build(File.ReadAllLines(@"..\..\..\Resources\c_no_hurry.in"));
-            var solution = ProblemSolver.Solve(problem);
-            Assert.NotNull(solution);
-            Trace.WriteLine(solution.GetTotalScore(problem.Bonus).ToString());
-            Trace.WriteLine(solution.ToString());
-        }
-
-        [Fact]
-        public void DTest()
-        {
-            var problem = ProblemBuilder.Build(File.ReadAllLines(@"..\..\..\Resources\d_metropolis.in"));
-            var solution = ProblemSolver.Solve(problem);
-            Assert.NotNull(solution);
-            Trace.WriteLine(solution.GetTotalScore(problem.Bonus).ToString());
             Trace.WriteLine(solution.ToString());
         }
     }
