@@ -29,7 +29,7 @@ namespace Rides.Tests
                 new Car(0, new Point(),0),
                 new Car(1, new Point(),0),
             };
-            var sut = new CityState(problem, cars, new RidesView(availableRides), 0);
+            var sut = new CityState(problem, cars, new RidesView2(availableRides), 0);
             var actual = sut.GetAvailableActions();
 
             foreach (var makeRideAction in actual)

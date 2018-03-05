@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ride.cs" />
     <Compile Include="RidesBuilder.cs" />
+    <Compile Include="RidesView2.cs" />
     <Compile Include="RidesView.cs" />
     <Compile Include="Solution.cs" />
   </ItemGroup>

@@ -9,16 +9,18 @@ namespace Rides
     {
         private readonly Problem _problem;
         private readonly List<Car> _cars;
-        private readonly RidesView _rides;
+        private readonly RidesView2 _rides;
+        private List<MakeRideAction> _actions;
 
         public double Score { get; set; }
 
-        public CityState(Problem problem, List<Car> cars, RidesView rides, double score)
+        public CityState(Problem problem, List<Car> cars, RidesView2 rides, double score)
         {
             _problem = problem;
             _cars = cars;
             _rides = rides;
             Score = score;
+            _actions = new List<MakeRideAction>(_cars.Count + 1);
         }
 
         public object Clone()
@@ -26,27 +28,31 @@ namespace Rides
             return new CityState(
                 _problem, 
                 new List<Car>(_cars), 
-                new RidesView(_rides.GetRides()), 
+                (RidesView2) _rides.Clone(), 
                 Score);
         }
 
         public List<MakeRideAction> GetAvailableActions()
         {
             if (_rides.Count == 0) return new List<MakeRideAction>(0);
-
-            var actions = new List<MakeRideAction>(_cars.Count + 1);
             var ride = _rides.GetEarliestFinish();
+            if (ride.Equals(default(Ride)))
+            {
+                return new List<MakeRideAction>(0);
+            }
+            _actions.Clear();
+            
             foreach (var car in _cars)
             {
                 if (car.CanMakeIt(ride))
                 {
-                    actions.Add(new MakeRideAction(ride, car));
+                    _actions.Add(new MakeRideAction(ride, car));
                 }
             }
 
-            actions.Add(new MakeRideAction(ride, Car.SkipRide));
-            //return actions.OrderByDescending(x => x.GetScore(_problem.Bonus)).Take(10).ToList();
-            return actions;
+            _actions.Add(new MakeRideAction(ride, Car.SkipRide));
+            return _actions.OrderByDescending(x => x.GetScore(_problem.Bonus)).Take(10).ToList();
+            return _actions;
         }
 
 

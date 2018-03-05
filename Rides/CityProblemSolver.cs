@@ -12,10 +12,10 @@ namespace Rides
         {
             var solution = new Solution(problem.NumberOfCars);
             var counter = 0;
-            var state = new CityState(problem, problem.Cars, new RidesView(problem.Rides), 0);
+            var state = new CityState(problem, problem.Cars, new RidesView2(problem.Rides), 0);
 
             INode<MakeRideAction> node;
-            while ((node = MonteCarloTreeSearch.GetTopActions(state, 1000).FirstOrDefault()) != null)
+            while ((node = MonteCarloTreeSearch.GetTopActions(state, 100).FirstOrDefault()) != null)
             {
                 state.ApplyAction(node.Action);
                 state.Score = 0;
