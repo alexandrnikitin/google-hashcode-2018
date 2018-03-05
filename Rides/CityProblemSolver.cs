@@ -13,10 +13,10 @@ namespace Rides
             var solution = new Solution(problem.NumberOfCars);
             var counter = 0;
             var state = new CityState(problem, problem.Cars, new RidesView2(problem.Rides), 0);
-
-            INode<MakeRideAction> node;
-            while ((node = MonteCarloTreeSearch.GetTopActions(state, 100).FirstOrDefault()) != null)
+            var node = MonteCarloTreeSearch.Create(state);
+            while ((node = MonteCarloTreeSearch.GetTopActions(node, state, 10, long.MaxValue).FirstOrDefault()) != null)
             {
+                node.Parent = null;
                 state.ApplyAction(node.Action);
                 state.Score = 0;
                 if (!node.Action.Car.Equals(Car.SkipRide))

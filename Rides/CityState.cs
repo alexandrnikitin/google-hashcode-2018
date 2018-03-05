@@ -36,10 +36,8 @@ namespace Rides
         {
             if (_rides.Count == 0) return new List<MakeRideAction>(0);
             var ride = _rides.GetEarliestFinish();
-            if (ride.Equals(default(Ride)))
-            {
-                return new List<MakeRideAction>(0);
-            }
+            if (ride.Equals(default(Ride)))return new List<MakeRideAction>(0);
+
             _actions.Clear();
             
             foreach (var car in _cars)

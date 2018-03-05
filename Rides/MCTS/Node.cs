@@ -15,7 +15,7 @@ namespace Rides.MCTS
             UntriedActions = new HashSet<TAction>(state.GetAvailableActions());
         }
 
-        public Node<TAction> Parent { get; }
+        public Node<TAction> Parent { get; set; }
         public IState<TAction> State { get; }
         public TAction Action { get; }
         public IList<Node<TAction>> Children { get; } = new List<Node<TAction>>();
@@ -24,9 +24,9 @@ namespace Rides.MCTS
         public bool Finished { get; set; }
 
         private readonly Random _random = new Random();
-        private readonly int _epsilonExpansion = 50;
-        private readonly int _epsilonExploration = 50;
-        private readonly int _simulationSteps = 10;
+        private readonly int _epsilonExpansion = 70;
+        private readonly int _epsilonExploration = 70;
+        private readonly int _simulationSteps = 20;
 
         public void BuildTree(Func<int, long, bool> shouldContinue)
         {
@@ -72,7 +72,7 @@ namespace Rides.MCTS
 
                 
                 // simulate
-                if (current.TrySimulateRandom(out var simulatedState))
+                if (current.TrySimulateGreedy(out var simulatedState))
                 {
                     currentScore = simulatedState.GetScore();
                     //Trace.WriteLine($"Simulated score {currentScore}");
