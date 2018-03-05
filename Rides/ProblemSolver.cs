@@ -18,7 +18,7 @@ namespace Rides
             {
                 INode<MakeRideAction> node;
                 var state = new CityCarState(problem, car, new HashSet<Ride>(rides), 0);
-                while ((node = MonteCarloTreeSearch.GetTopActions(state, 100, 100).FirstOrDefault()) != null)
+                while ((node = MonteCarloTreeSearch<MakeRideAction>.GetTopActions(state, 100, 100).FirstOrDefault()) != null)
                 {
                     state.ApplyAction(node.Action);
                     solution.CarActions[node.Action.Car.Id].Add(node.Action);
