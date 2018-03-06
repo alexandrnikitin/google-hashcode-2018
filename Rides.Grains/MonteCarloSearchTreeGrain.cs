@@ -8,18 +8,19 @@ namespace Rides.Grains
 {
     public class MonteCarloSearchTreeGrain<TAction> : Grain, IMonteCarloTreeSearchGrain<TAction> where TAction : IAction
     {
-        private MonteCarloTreeSearch<TAction> _tree;
+        private DMCTS.Node<TAction> _tree;
 
         public async Task Init(IState<TAction> initialState)
         {
-            _tree = new MonteCarloTreeSearch<TAction>(initialState);
+
+            _tree = new DMCTS.Node<TAction>(GrainFactory, initialState, default, default);
         }
 
-        public Task<Node<TAction>> GetTopAction(int maxIterations, long timeBudget)
+        public async Task<INode<TAction>> GetTopAction(int maxIterations, long timeBudget)
         {
-            _tree.BuildTree((numIterations, elapsedMs) => numIterations < maxIterations && elapsedMs < timeBudget);
-            var node = _tree.GetTopActions(10, 10).FirstOrDefault();
-            return Task.FromResult(node);
+            await _tree.BuildTreeAsync((numIterations, elapsedMs) => numIterations < maxIterations && elapsedMs < timeBudget);
+            var node = _tree.GetTopActions().FirstOrDefault();
+            return node;
         }
     }
 }

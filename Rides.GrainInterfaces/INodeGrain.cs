@@ -6,7 +6,7 @@ namespace Rides.GrainInterfaces
 {
     public interface INodeGrain : IGrainWithGuidKey
     {
-        Task Build();
-        Task<IEnumerable<INodeGrain>> GetChildren();
+//        Task Build();
+//        Task<IEnumerable<INodeGrain>> GetChildren();
     }
 }

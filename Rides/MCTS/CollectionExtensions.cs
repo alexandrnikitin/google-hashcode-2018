@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Rides.MCTS
 {
-    internal static class CollectionExtensions
+    public static class CollectionExtensions
     {
         private static Random _random = new Random();
 
