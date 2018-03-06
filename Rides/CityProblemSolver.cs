@@ -12,7 +12,7 @@ namespace Rides
         {
             var solution = new Solution(problem.NumberOfCars);
             var counter = 0;
-            var state = new CityState(problem, problem.Cars, new RidesView2(problem.Rides), 0);
+            var state = new CityState(problem, problem.Cars, new RidesView3(problem.Rides), 0);
             var node = MonteCarloTreeSearch<MakeRideAction>.Create(state);
             while ((node = MonteCarloTreeSearch<MakeRideAction>.GetTopActions(node, 10, long.MaxValue).FirstOrDefault()) != null)
             {

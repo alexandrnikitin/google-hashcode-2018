@@ -9,12 +9,12 @@ namespace Rides
     {
         private readonly Problem _problem;
         private readonly List<Car> _cars;
-        private readonly RidesView2 _rides;
+        private readonly RidesView3 _rides;
         private List<MakeRideAction> _actions;
 
         public double Score { get; set; }
 
-        public CityState(Problem problem, List<Car> cars, RidesView2 rides, double score)
+        public CityState(Problem problem, List<Car> cars, RidesView3 rides, double score)
         {
             _problem = problem;
             _cars = cars;
@@ -28,7 +28,7 @@ namespace Rides
             return new CityState(
                 _problem, 
                 new List<Car>(_cars), 
-                (RidesView2) _rides.Clone(), 
+                (RidesView3) _rides.Clone(), 
                 Score);
         }
 
@@ -49,7 +49,7 @@ namespace Rides
             }
 
             _actions.Add(new MakeRideAction(ride, Car.SkipRide));
-            return _actions.OrderByDescending(x => x.GetScore(_problem.Bonus)).Take(10).ToList();
+            //return _actions.OrderByDescending(x => x.GetScore(_problem.Bonus)).Take(10).ToList();
             return _actions;
         }
 
