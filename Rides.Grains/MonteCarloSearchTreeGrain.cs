@@ -18,7 +18,8 @@ namespace Rides.Grains
         public Task<Node<TAction>> GetTopAction(int maxIterations, long timeBudget)
         {
             _tree.BuildTree((numIterations, elapsedMs) => numIterations < maxIterations && elapsedMs < timeBudget);
-            return Task.FromResult(_tree.GetTopActions(1000, 10).FirstOrDefault());
+            var node = _tree.GetTopActions(10, 10).FirstOrDefault();
+            return Task.FromResult(node);
         }
     }
 }

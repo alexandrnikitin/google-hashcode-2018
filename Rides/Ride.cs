@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Rides
 {
+    [Serializable]
     public struct Ride : IEquatable<Ride>
     {
         public int Id { get; }

@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rides.SiloHost", "Rides.Sil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rides.SiloClient", "Rides.SiloClient\Rides.SiloClient.csproj", "{0A7DDB53-5D85-4693-8B63-91055C692EF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rides.Silo.Tests", "Rides.Silo.Tests\Rides.Silo.Tests.csproj", "{591AC929-E007-4E44-B21B-394166FD5F78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{0A7DDB53-5D85-4693-8B63-91055C692EF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A7DDB53-5D85-4693-8B63-91055C692EF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A7DDB53-5D85-4693-8B63-91055C692EF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{591AC929-E007-4E44-B21B-394166FD5F78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{591AC929-E007-4E44-B21B-394166FD5F78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{591AC929-E007-4E44-B21B-394166FD5F78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{591AC929-E007-4E44-B21B-394166FD5F78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

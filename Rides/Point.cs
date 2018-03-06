@@ -2,6 +2,7 @@
 
 namespace Rides
 {
+    [Serializable]
     public struct Point
     {
         public int X { get; }

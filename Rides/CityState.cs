@@ -5,6 +5,7 @@ using Rides.MCTS;
 
 namespace Rides
 {
+    [Serializable]
     public class CityState : IState<MakeRideAction>
     {
         private readonly Problem _problem;

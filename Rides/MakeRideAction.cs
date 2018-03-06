@@ -4,6 +4,7 @@ using Rides.MCTS;
 
 namespace Rides
 {
+    [Serializable]
     public class MakeRideAction : IAction
     {
         public Ride Ride { get; }

@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Rides
 {
+    [Serializable]
     public class RidesView3 : ICloneable
     {
         private int? _lastRemoved;

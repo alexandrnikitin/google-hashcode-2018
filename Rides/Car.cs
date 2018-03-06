@@ -2,6 +2,7 @@
 
 namespace Rides
 {
+    [Serializable]
     public struct Car : IEquatable<Car>
     {
         public Car(int id, Point location, int time)

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Rides
 {
+    [Serializable]
     public class Problem
     {
         public int Rows { get; }
