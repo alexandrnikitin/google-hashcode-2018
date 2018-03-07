@@ -33,6 +33,10 @@ namespace Rides.Grains
         {
             _parentId = parentId;
             _state = state;
+            foreach (var action in _state.GetAvailableActions())
+            {
+                _untriedActions.Add(action);
+            }
         }
 
         public async Task Build()
