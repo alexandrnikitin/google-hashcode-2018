@@ -202,10 +202,6 @@
       <Project>{08412123-8d22-47f0-8058-6bc43401a61d}</Project>
       <Name>Rides.Grains</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rides\Rides.csproj">
-      <Project>{009E24D8-F3F3-4AC1-8AB4-60A714FD1591}</Project>
-      <Name>Rides</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -119,7 +119,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DMCTS\Node.cs" />
+    <Compile Include="Car.cs" />
+    <Compile Include="CityState.cs" />
+    <Compile Include="ImmutableListSerializer.cs" />
+    <Compile Include="MakeRideAction.cs" />
+    <Compile Include="NodeGrain.cs" />
+    <Compile Include="NodeView.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="Problem.cs" />
+    <Compile Include="ProblemBuilder.cs" />
+    <Compile Include="Ride.cs" />
+    <Compile Include="RidesBuilder.cs" />
+    <Compile Include="RidesView3.cs" />
     <Compile Include="TreeGrain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulationWorkerGrain.cs" />
@@ -132,10 +143,6 @@
     <ProjectReference Include="..\Rides.GrainInterfaces\Rides.GrainInterfaces.csproj">
       <Project>{bef5fe1a-6ff5-4953-a0aa-7cf7daa69688}</Project>
       <Name>Rides.GrainInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rides\Rides.csproj">
-      <Project>{009e24d8-f3f3-4ac1-8ab4-60a714fd1591}</Project>
-      <Name>Rides</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

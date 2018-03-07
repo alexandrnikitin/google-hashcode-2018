@@ -69,8 +69,8 @@ namespace Rides.SiloClient
 
         private static async Task DoClientWork(IClusterClient client)
         {
-            var tree = client.GetGrain<ITreeGrain>(Guid.NewGuid());
-            await tree.Build();
+            //var tree = client.GetGrain<ITreeGrain<>(Guid.NewGuid());
+            //await tree.Build();
             //Console.WriteLine(action);
         }
 

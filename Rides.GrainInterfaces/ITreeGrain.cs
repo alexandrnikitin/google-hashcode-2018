@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Orleans;
-using Rides.MCTS;
 
 namespace Rides.GrainInterfaces
 {
-    public interface ITreeGrain : IGrainWithGuidKey
+    public interface ITreeGrain<TAction> : IGrainWithGuidKey where TAction : IAction
     {
-        Task Init(IState<IAction> initialState);
-        //        Task<INode<TAction>> GetTopAction(int maxIterations, long timeBudget);
+        Task Init(IState<TAction> initialState);
         Task Build();
+        Task<INodeView<TAction>> GetTopAction();
     }
 }

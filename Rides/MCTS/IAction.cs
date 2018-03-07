@@ -1,4 +1,7 @@
-﻿namespace Rides.MCTS
+﻿using System;
+
+namespace Rides.MCTS
 {
-    public interface IAction {}
+    public interface IAction
+    { }
 }

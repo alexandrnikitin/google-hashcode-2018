@@ -188,10 +188,6 @@
       <Project>{bef5fe1a-6ff5-4953-a0aa-7cf7daa69688}</Project>
       <Name>Rides.GrainInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rides\Rides.csproj">
-      <Project>{009e24d8-f3f3-4ac1-8ab4-60a714fd1591}</Project>
-      <Name>Rides</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
