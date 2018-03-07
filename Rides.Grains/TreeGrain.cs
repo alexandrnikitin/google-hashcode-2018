@@ -15,14 +15,24 @@ namespace Rides.Grains
             await _root.Init(Guid.Empty, initialState);
         }
 
+        public Task ContinueFrom(Guid nodeId)
+        {
+            _root = GrainFactory.GetGrain<INodeGrain<TAction>>(nodeId);
+            _root.Init(Guid.Empty);
+            return Task.CompletedTask;
+        }
+
         public Task<INodeView<TAction>> GetTopAction()
         {
             return _root.GetTopAction();
         }
 
-        public Task Build()
+        public async Task Build()
         {
-            return _root.Build();
+            for (var i = 0; i < 2; i++)
+            {
+                await _root.Build();
+            }
         }
     }
 }

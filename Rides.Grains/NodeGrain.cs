@@ -30,6 +30,12 @@ namespace Rides.Grains
             _random = new Random();
         }
 
+        public Task Init(Guid parentId)
+        {
+            _parentId = parentId;
+            return Task.CompletedTask;
+        }
+
         public async Task Init(Guid parentId, IState<TAction> state)
         {
             _parentId = parentId;
@@ -58,6 +64,7 @@ namespace Rides.Grains
                 {
                     var nodeView = new NodeView<TAction> {Id = this.GetPrimaryKey(), IsFinished = _isFinished};
                     await GrainFactory.GetGrain<INodeGrain<TAction>>(_parentId).BackPropagate(nodeView);
+                    return;
                 }
             }
 
@@ -77,8 +84,6 @@ namespace Rides.Grains
                 await toExpand.Init(this.GetPrimaryKey(), _state);
                 await toExpand.Expand(action);
             }
-
-            //TODO currentScore = current.State.GetScore();
         }
 
         public async Task Expand(TAction action)

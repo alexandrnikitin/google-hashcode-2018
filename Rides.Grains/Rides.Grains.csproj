@@ -132,6 +132,7 @@
     <Compile Include="Ride.cs" />
     <Compile Include="RidesBuilder.cs" />
     <Compile Include="RidesView3.cs" />
+    <Compile Include="Solution.cs" />
     <Compile Include="TreeGrain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulationWorkerGrain.cs" />
