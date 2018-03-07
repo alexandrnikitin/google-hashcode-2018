@@ -21,6 +21,7 @@ namespace Rides.Grains
         private readonly int _epsilonExpansion = 70;
         private readonly int _epsilonExploration = 70;
         private readonly int _simulationSteps = 20;
+        private readonly int _numberOfSimulations = 20;
 
         public override async Task OnActivateAsync()
         {
@@ -84,20 +85,16 @@ namespace Rides.Grains
         {
             _action = action;
             _state = _state.Apply(action);
-            var availableActions = _state.GetAvailableActions();
-            if (!availableActions.Any()) return;
 
-            // TODO more simulations in parallel
-            var counter = 0;
-            var simState = _state;
-            while (availableActions.Any() && counter < _simulationSteps)
+            var tasks = new Task<double>[_numberOfSimulations];
+            for (var i = 0; i < _numberOfSimulations; i++)
             {
-                simState = simState.Apply(availableActions.First());
-                availableActions = simState.GetAvailableActions();
-                counter++;
+                var worker = GrainFactory.GetGrain<ISimulationWorkerGrain<TAction>>(0);
+                tasks[i] = worker.Simulate(_state);
             }
+            await Task.WhenAll(tasks);
 
-            var simScore = simState.GetScore();
+            var simScore = tasks.Select(x => x.Result).Max();
             if (simScore > _score)
             {
                 _score = simScore;

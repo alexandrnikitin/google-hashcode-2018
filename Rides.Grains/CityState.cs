@@ -6,7 +6,7 @@ using Rides.GrainInterfaces;
 
 namespace Rides.Grains
 {
-    //[Immutable]
+    [Immutable]
     [Serializable]
     public class CityState : IState<MakeRideAction>
     {
