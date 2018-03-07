@@ -119,7 +119,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMonteCarloTreeSearchGrain.cs" />
+    <Compile Include="ITreeGrain.cs" />
     <Compile Include="INodeGrain.cs" />
     <Compile Include="ISimulationWorkerGrain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

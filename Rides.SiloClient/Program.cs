@@ -69,9 +69,9 @@ namespace Rides.SiloClient
 
         private static async Task DoClientWork(IClusterClient client)
         {
-            var tree = client.GetGrain<IMonteCarloTreeSearchGrain<MakeRideAction>>(Guid.NewGuid());
-            var action = await tree.GetTopAction(100, 10);
-            Console.WriteLine(action);
+            var tree = client.GetGrain<ITreeGrain>(Guid.NewGuid());
+            await tree.Build();
+            //Console.WriteLine(action);
         }
 
 

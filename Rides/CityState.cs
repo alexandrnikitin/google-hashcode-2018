@@ -77,6 +77,11 @@ namespace Rides
                     action.Car.Time + totalRideTime); ;
         }
 
+        public IState<MakeRideAction> Apply(MakeRideAction action)
+        {
+            throw new NotImplementedException();
+        }
+
         public double GetScore()
         {
             return Score;

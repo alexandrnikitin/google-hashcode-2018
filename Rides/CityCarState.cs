@@ -114,6 +114,11 @@ namespace Rides
             _availableRides.RemoveWhere(x => !_car.CanMakeIt(x));
         }
 
+        public IState<MakeRideAction> Apply(MakeRideAction action)
+        {
+            throw new NotImplementedException();
+        }
+
         public double GetScore()
         {
             return _score;
