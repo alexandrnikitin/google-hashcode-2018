@@ -1,34 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orleans.Concurrency;
 
 namespace Rides.Grains
 {
     [Serializable]
+    [Immutable]
     public class RidesView3
     {
-        private int? _lastRemoved;
+        public int? LastRemoved { get; set; }
+        public List<Ride> EarliestFinish { get; set; }
+        public int Bonus { get; set; }
 
-        private readonly List<Ride> _earliestFinish;
-
-        public RidesView3(IEnumerable<Ride> rides)
+        public RidesView3(IEnumerable<Ride> rides, int bonus)
         {
-            _earliestFinish = rides.OrderBy(x => x, EarliestComparer).ToList();
+            Bonus = bonus;
+            EarliestFinish = rides.OrderBy(x => x, EarliestComparer).ToList();
         }
 
-        private RidesView3(List<Ride> earliestFinish, int? lastRemoved)
+        private RidesView3(List<Ride> earliestFinish, int? lastRemoved, int bonus)
         {
-            _earliestFinish = earliestFinish;
-            _lastRemoved = lastRemoved;
+            EarliestFinish = earliestFinish;
+            Bonus = bonus;
+            LastRemoved = lastRemoved;
         }
 
         public Ride GetEarliestFinish()
         {
-            if (_lastRemoved.HasValue)
+            if (LastRemoved.HasValue)
             {
-                if (_lastRemoved.Value + 1 < _earliestFinish.Count)
+                if (LastRemoved.Value + 1 < EarliestFinish.Count)
                 {
-                    return _earliestFinish[_lastRemoved.Value + 1];
+                    return EarliestFinish[LastRemoved.Value + 1];
                 }
                 else
                 {
@@ -36,17 +40,17 @@ namespace Rides.Grains
                 }
             }
             else
-                return _earliestFinish[0];
+                return EarliestFinish[0];
         }
 
         public RidesView3 Remove(Ride ride)
         {
-            return _lastRemoved.HasValue
-                ? new RidesView3(_earliestFinish, _lastRemoved.Value + 1)
-                : new RidesView3(_earliestFinish, 0);
+            return LastRemoved.HasValue
+                ? new RidesView3(EarliestFinish, LastRemoved.Value + 1, Bonus)
+                : new RidesView3(EarliestFinish, 0, Bonus);
         }
 
-        public int Count => _lastRemoved.HasValue ? _earliestFinish.Count - _lastRemoved.Value : _earliestFinish.Count - 1;
+        public int Count => LastRemoved.HasValue ? EarliestFinish.Count - LastRemoved.Value : EarliestFinish.Count - 1;
 
         private sealed class EarliestRelationalComparer : IComparer<Ride>
         {

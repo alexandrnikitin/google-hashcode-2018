@@ -3,7 +3,7 @@
 namespace Rides.Grains
 {
     [Serializable]
-    public struct Point
+    public struct Point : IEquatable<Point>
     {
         public int X { get; }
 
@@ -20,6 +20,25 @@ namespace Rides.Grains
         public override string ToString()
         {
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}";
+        }
+
+        public bool Equals(Point other)
+        {
+            return X == other.X && Y == other.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Point && Equals((Point) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X * 397) ^ Y;
+            }
         }
     }
 }

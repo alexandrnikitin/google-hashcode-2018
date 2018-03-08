@@ -11,8 +11,9 @@ namespace Rides.Grains
 
         public async Task Init(IState<TAction> initialState)
         {
+            DelayDeactivation(TimeSpan.FromMinutes(30));
             _root = GrainFactory.GetGrain<INodeGrain<TAction>>(Guid.NewGuid());
-            await _root.Init(Guid.Empty, initialState);
+            await _root.Init(Guid.Empty, initialState, default);
         }
 
         public Task ContinueFrom(Guid nodeId)
@@ -29,7 +30,7 @@ namespace Rides.Grains
 
         public async Task Build()
         {
-            for (var i = 0; i < 2; i++)
+            for (var i = 0; i < 10; i++)
             {
                 await _root.Build();
             }

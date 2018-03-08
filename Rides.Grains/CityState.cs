@@ -12,12 +12,13 @@ namespace Rides.Grains
     {
         public ImmutableList<Car> Cars { get; set; }
         public RidesView3 Rides { get; set; }
-        private double _score;
+        public double Score { get; set; }
 
-        public CityState(ImmutableList<Car> cars, RidesView3 rides)
+        public CityState(ImmutableList<Car> cars, RidesView3 rides, double score)
         {
             Cars = cars;
             Rides = rides;
+            Score = score;
         }
 
         public IEnumerable<MakeRideAction> GetAvailableActions()
@@ -46,10 +47,10 @@ namespace Rides.Grains
             var newRides = Rides.Remove(action.Ride);
             if (action.Car.Equals(Car.SkipRide))
             {
-                return new CityState(Cars, newRides);
+                return new CityState(Cars, newRides, Score);
             }
 
-            _score += action.GetFactScore(0); // TODO bonus
+            Score += action.GetFactScore(Rides.Bonus);
 
             var rideDistance = action.Ride.From.Distance(action.Ride.To);
             var pickDistance = action.Car.Location.Distance(action.Ride.From);
@@ -62,13 +63,13 @@ namespace Rides.Grains
                     new Point(action.Ride.To.X, action.Ride.To.Y),
                     action.Car.Time + totalRideTime);
             var newCars = Cars.Replace(action.Car, newCar);
-            return new CityState(newCars, newRides);
+            return new CityState(newCars, newRides, Score);
 
         }
 
         public double GetScore()
         {
-            return _score;
+            return Score;
         }
     }
 }

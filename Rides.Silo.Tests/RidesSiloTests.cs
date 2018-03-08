@@ -30,7 +30,7 @@ namespace Rides.Silo.Tests
         public async Task SiloSayHelloTest()
         {
             var problem = ProblemBuilder.Build(File.ReadAllLines(@"..\..\..\Resources\a_example.in"));
-            var state = new CityState(problem.Cars.ToImmutableList(), new RidesView3(problem.Rides));
+            var state = new CityState(problem.Cars.ToImmutableList(), new RidesView3(problem.Rides, problem.Bonus), 0);
             var grain = GrainFactory.GetGrain<ITreeGrain<MakeRideAction>>(Guid.NewGuid());
             await grain.Init(state);
             await grain.Build();
@@ -44,7 +44,7 @@ namespace Rides.Silo.Tests
         {
             var problem = ProblemBuilder.Build(File.ReadAllLines(@"..\..\..\Resources\a_example.in"));
             var solution = new Solution(problem.NumberOfCars);
-            var state = new CityState(problem.Cars.ToImmutableList(), new RidesView3(problem.Rides));
+            var state = new CityState(problem.Cars.ToImmutableList(), new RidesView3(problem.Rides, problem.Bonus), 0);
             var tree = GrainFactory.GetGrain<ITreeGrain<MakeRideAction>>(Guid.NewGuid());
             await tree.Init(state);
             await tree.Build();

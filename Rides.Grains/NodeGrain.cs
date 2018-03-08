@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using Rides.GrainInterfaces;
 
 namespace Rides.Grains
 {
+    [Reentrant]
     public class NodeGrain<TAction> : Grain, INodeGrain<TAction> where TAction:IAction
     {
         private List<INodeView<TAction>> _children;
@@ -21,13 +24,15 @@ namespace Rides.Grains
         private readonly int _epsilonExpansion = 70;
         private readonly int _epsilonExploration = 70;
         private readonly int _simulationSteps = 20;
-        private readonly int _numberOfSimulations = 20;
+        private readonly int _numberOfSimulations = 50;
 
-        public override async Task OnActivateAsync()
+        public override Task OnActivateAsync()
         {
+            DelayDeactivation(TimeSpan.FromMinutes(30));
             _children = new List<INodeView<TAction>>();
             _untriedActions = new HashSet<TAction>();
             _random = new Random();
+            return Task.CompletedTask;
         }
 
         public Task Init(Guid parentId)
@@ -36,21 +41,29 @@ namespace Rides.Grains
             return Task.CompletedTask;
         }
 
-        public async Task Init(Guid parentId, IState<TAction> state)
+        public Task Init(Guid parentId, IState<TAction> state, TAction action)
         {
+//            Trace.WriteLine("Init");
             _parentId = parentId;
+            _action = action;
             _state = state;
-            foreach (var action in _state.GetAvailableActions())
+            if (action != null)_state = _state.Apply(action);
+//            Trace.WriteLine("applied");
+
+            foreach (var a in _state.GetAvailableActions())
             {
-                _untriedActions.Add(action);
+                _untriedActions.Add(a);
             }
+            return Task.CompletedTask;
         }
 
         public async Task Build()
         {
+//            Trace.WriteLine("Build");
             if (_isFinished) return;
             if (TrySelect(out var next))
             {
+//                Trace.WriteLine("Selected");
                 if (next != this.GetPrimaryKey())
                 {
                     await GrainFactory.GetGrain<INodeGrain<TAction>>(next).Build();
@@ -59,13 +72,16 @@ namespace Rides.Grains
             }
             else
             {
+//                Trace.WriteLine("Not Selected");
                 _isFinished = true;
+                
                 if (_parentId != Guid.Empty)
                 {
+                    //Trace.WriteLine("Trying to Backprop");
                     var nodeView = new NodeView<TAction> {Id = this.GetPrimaryKey(), IsFinished = _isFinished};
                     await GrainFactory.GetGrain<INodeGrain<TAction>>(_parentId).BackPropagate(nodeView);
-                    return;
                 }
+                return;
             }
 
             // expand
@@ -81,15 +97,14 @@ namespace Rides.Grains
                 };
                 _children.Add(child);
                 var toExpand = GrainFactory.GetGrain<INodeGrain<TAction>>(child.Id);
-                await toExpand.Init(this.GetPrimaryKey(), _state);
-                await toExpand.Expand(action);
+                await toExpand.Init(this.GetPrimaryKey(), _state, action);
+                await toExpand.Expand();
             }
         }
 
-        public async Task Expand(TAction action)
+        public async Task Expand()
         {
-            _action = action;
-            _state = _state.Apply(action);
+//            Trace.WriteLine("Expand");
 
             var tasks = new Task<double>[_numberOfSimulations];
             for (var i = 0; i < _numberOfSimulations; i++)
@@ -113,8 +128,14 @@ namespace Rides.Grains
 
         public async Task BackPropagate(INodeView<TAction> node)
         {
+//            Trace.WriteLine("BackPropagate");
             var propagateFurther = false;
             var thisNode = _children.Single(x => x.Id == node.Id);
+            if (node.Score > thisNode.Score)
+            {
+                thisNode.Score = node.Score;
+            }
+
             if (node.Score > _score)
             {
                 _score = node.Score;
@@ -128,9 +149,8 @@ namespace Rides.Grains
                 if (_children.All(x => x.IsFinished) && !_untriedActions.Any())
                 {
                     _isFinished = true;
+                    propagateFurther = true;
                 }
-
-                propagateFurther = true;
             }
 
             if (propagateFurther && _parentId != Guid.Empty)
@@ -153,6 +173,7 @@ namespace Rides.Grains
 
         private bool TrySelect(out Guid next)
         {
+//            Trace.WriteLine("TrySelect");
             if (_children.All(x => x.IsFinished) && !_untriedActions.Any())
             {
                 // TODO throw?
