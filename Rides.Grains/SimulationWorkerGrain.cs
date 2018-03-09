@@ -8,6 +8,7 @@ using Rides.GrainInterfaces;
 namespace Rides.Grains
 {
     [StatelessWorker]
+    [Reentrant]
     public class SimulationWorkerGrain<TAction> : Grain, ISimulationWorkerGrain<TAction> where TAction : IAction
     {
         private readonly int _simulationSteps = 100;

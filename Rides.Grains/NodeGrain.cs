@@ -25,6 +25,7 @@ namespace Rides.Grains
         private readonly int _epsilonExploration = 70;
         private readonly int _simulationSteps = 20;
         private readonly int _numberOfSimulations = 50;
+        private readonly int _expansionParallelism = 10;
 
         public override Task OnActivateAsync()
         {
@@ -78,7 +79,7 @@ namespace Rides.Grains
                 if (_parentId != Guid.Empty)
                 {
                     //Trace.WriteLine("Trying to Backprop");
-                    var nodeView = new NodeView<TAction> {Id = this.GetPrimaryKey(), IsFinished = _isFinished};
+                    var nodeView = new NodeView<TAction>(this.GetPrimaryKey(), default, _isFinished, default);
                     await GrainFactory.GetGrain<INodeGrain<TAction>>(_parentId).BackPropagate(nodeView);
                 }
                 return;
@@ -87,18 +88,18 @@ namespace Rides.Grains
             // expand
             if (_untriedActions.Any())
             {
-                var action = _untriedActions.RandomChoice();
-                _untriedActions.Remove(action);
-
-                var child = new NodeView<TAction>
+                var tasks = new Task[Math.Min(_untriedActions.Count, _expansionParallelism)];
+                for (var i = 0; i < tasks.Length; i++)
                 {
-                    Id = Guid.NewGuid(),
-                    Action = action
-                };
-                _children.Add(child);
-                var toExpand = GrainFactory.GetGrain<INodeGrain<TAction>>(child.Id);
-                await toExpand.Init(this.GetPrimaryKey(), _state, action);
-                await toExpand.Expand();
+                    var action = _untriedActions.RandomChoice();
+                    _untriedActions.Remove(action);
+
+                    var child = new NodeView<TAction>(Guid.NewGuid(), action, default, default);
+                    _children.Add(child);
+                    var toExpand = GrainFactory.GetGrain<INodeGrain<TAction>>(child.Id);
+                    tasks[i] = toExpand.Init(this.GetPrimaryKey(), _state, action).ContinueWith(x => toExpand.Expand());
+                }
+                await Task.WhenAll(tasks);
             }
         }
 
@@ -120,7 +121,7 @@ namespace Rides.Grains
                 _score = simScore;
                 if (_parentId != Guid.Empty)
                 {
-                    var nodeView = new NodeView<TAction> { Id = this.GetPrimaryKey(), Score = simScore};
+                    var nodeView = new NodeView<TAction>(this.GetPrimaryKey(), default, default, simScore);
                     await GrainFactory.GetGrain<INodeGrain<TAction>>(_parentId).BackPropagate(nodeView);
                 }
             }
@@ -155,13 +156,7 @@ namespace Rides.Grains
 
             if (propagateFurther && _parentId != Guid.Empty)
             {
-                var newNode = new NodeView<TAction>
-                {
-                    Id = this.GetPrimaryKey(),
-                    IsFinished = _isFinished,
-                    Score = _score
-                };
-
+                var newNode = new NodeView<TAction>(this.GetPrimaryKey(), default, _isFinished, _score);
                 await GrainFactory.GetGrain<INodeGrain<TAction>>(_parentId).BackPropagate(newNode);
             }
         }
