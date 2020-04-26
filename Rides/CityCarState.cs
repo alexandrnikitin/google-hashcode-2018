@@ -47,6 +47,11 @@ namespace Rides
             return set.OrderByDescending(x => x.GetScore(_problem.Bonus)).ToList();
         }
 
+        public MakeRideAction GetRandomAction()
+        {
+            throw new NotImplementedException();
+        }
+
         private IEnumerable<Ride> GetMinFinish(int n)
         {
             var comparer = Ride.FinishComparer;
@@ -122,6 +127,11 @@ namespace Rides
         public double GetScore()
         {
             return _score;
+        }
+
+        IEnumerable<MakeRideAction> IState<MakeRideAction>.GetAvailableActions()
+        {
+            throw new NotImplementedException();
         }
     }
 }

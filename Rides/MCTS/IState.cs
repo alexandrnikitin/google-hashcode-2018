@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Rides.MCTS
 {
-    public interface IState<TAction> : ICloneable where TAction: IAction
+    public interface IState<TAction> where TAction : IAction
     {
-        List<TAction> GetAvailableActions();
-        void ApplyAction(TAction action);
+        IEnumerable<TAction> GetAvailableActions();
+        TAction GetRandomAction();
         IState<TAction> Apply(TAction action);
         double GetScore();
     }

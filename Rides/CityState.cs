@@ -1,85 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using Rides.MCTS;
 
 namespace Rides
 {
-    [Serializable]
     public class CityState : IState<MakeRideAction>
     {
-        private readonly Problem _problem;
-        private readonly List<Car> _cars;
-        private readonly RidesView3 _rides;
-        private List<MakeRideAction> _actions;
-
+        public ImmutableList<Car> Cars { get; set; }
+        public RidesView3 Rides { get; set; }
         public double Score { get; set; }
 
-        public CityState(Problem problem, List<Car> cars, RidesView3 rides, double score)
+        public CityState(ImmutableList<Car> cars, RidesView3 rides, double score)
         {
-            _problem = problem;
-            _cars = cars;
-            _rides = rides;
+            Cars = cars;
+            Rides = rides;
             Score = score;
-            _actions = new List<MakeRideAction>(_cars.Count + 1);
         }
 
-        public object Clone()
+        public IEnumerable<MakeRideAction> GetAvailableActions()
         {
-            return new CityState(
-                _problem, 
-                new List<Car>(_cars), 
-                (RidesView3) _rides.Clone(), 
-                Score);
-        }
+            if (Rides.Count == 0) return new List<MakeRideAction>(0);
+            var ride = Rides.GetEarliestFinish();
+            if (ride.Equals(default)) return new List<MakeRideAction>(0);
 
-        public List<MakeRideAction> GetAvailableActions()
-        {
-            if (_rides.Count == 0) return new List<MakeRideAction>(0);
-            var ride = _rides.GetEarliestFinish();
-            if (ride.Equals(default(Ride)))return new List<MakeRideAction>(0);
+            var actions = new List<MakeRideAction>(Cars.Count + 1);
 
-            _actions.Clear();
-            
-            foreach (var car in _cars)
+            foreach (var car in Cars)
             {
                 if (car.CanMakeIt(ride))
                 {
-                    _actions.Add(new MakeRideAction(ride, car));
+                    actions.Add(new MakeRideAction(ride, car));
                 }
             }
 
-            _actions.Add(new MakeRideAction(ride, Car.SkipRide));
-            //return _actions.OrderByDescending(x => x.GetScore(_problem.Bonus)).Take(10).ToList();
-            return _actions;
+            actions.Add(new MakeRideAction(ride, Car.SkipRide));
+            return actions;
+            //return actions.OrderByDescending(x => x.GetScore(Rides.Bonus)).Take(20).ToList();
+
+        }
+        private static readonly Random Random = new Random();
+
+        public MakeRideAction GetRandomAction()
+        {
+            if (Rides.Count == 0) return null;
+            var ride = Rides.GetEarliestFinish();
+            if (ride.Equals(default)) return null;
+
+            var car = Cars[Random.Next(Cars.Count)];
+            return car.CanMakeIt(ride) ? new MakeRideAction(ride, car) : null;
         }
 
-
-        public void ApplyAction(MakeRideAction action)
+        public IState<MakeRideAction> Apply(MakeRideAction action)
         {
+            var newRides = Rides.Remove(action.Ride);
             if (action.Car.Equals(Car.SkipRide))
             {
-                _rides.Remove(action.Ride);
-                return;
+                return new CityState(Cars, newRides, Score);
             }
 
-            Score += action.GetFactScore(_problem.Bonus);
-            _rides.Remove(action.Ride);
+            Score += action.GetFactScore(Rides.Bonus);
 
             var rideDistance = action.Ride.From.Distance(action.Ride.To);
             var pickDistance = action.Car.Location.Distance(action.Ride.From);
             var waitTime = Math.Max(0, action.Ride.Start - (action.Car.Time + pickDistance)); // todo check same time
             var totalRideTime = pickDistance + rideDistance + waitTime;
-            _cars[action.Car.Id] =
+
+            var newCar =
                 new Car(
                     action.Car.Id,
                     new Point(action.Ride.To.X, action.Ride.To.Y),
-                    action.Car.Time + totalRideTime); ;
-        }
+                    action.Car.Time + totalRideTime);
+            var newCars = Cars.Replace(action.Car, newCar);
+            return new CityState(newCars, newRides, Score);
 
-        public IState<MakeRideAction> Apply(MakeRideAction action)
-        {
-            throw new NotImplementedException();
         }
 
         public double GetScore()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 using Xunit;
@@ -29,7 +30,7 @@ namespace Rides.Tests
                 new Car(0, new Point(),0),
                 new Car(1, new Point(),0),
             };
-            var sut = new CityState(problem, cars, new RidesView3(availableRides), 0);
+            var sut = new CityState(cars.ToImmutableList(), new RidesView3(availableRides, problem.Bonus), 0);
             var actual = sut.GetAvailableActions();
 
             foreach (var makeRideAction in actual)
